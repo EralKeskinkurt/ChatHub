@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Comfortaa } from "next/font/google";
 import "./globals.css";
-import TopArea from "@/components/TopArea";
+
 import Provider from "@/providers";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa-sans",
@@ -20,13 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${comfortaa.variable} antialiased `}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${comfortaa.variable} antialiased dark:bg-theme-dark bg-theme-light relative`}
+      >
         <Provider>
-          <div className="dark:bg-theme-dark bg-theme-light relative w-full min-h-screen overflow-hidden">
-            <TopArea />
-            {children}
-          </div>
+          <ThemeToggle />
+          {children}
         </Provider>
       </body>
     </html>
