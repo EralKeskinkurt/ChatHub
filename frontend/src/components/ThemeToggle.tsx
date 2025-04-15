@@ -6,7 +6,7 @@ export default function ThemeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <div className="group fixed right-4 top-4">
+    <div className="group fixed right-4 top-4 z-10">
       <div className="flex flex-col items-center justify-center">
         <button className="transition-all dark:hover:text-theme-yellow dark:text-theme-yellow/60 hover:text-theme-dark text-theme-dark/60 bg-theme-yellow z-10 dark:bg-theme-gray-dark cursor-pointer rounded-full p-2 shadow-xs shadow-theme-dark dark:shadow-theme-light">
           <Icon

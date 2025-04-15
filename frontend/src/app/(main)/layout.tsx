@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Comfortaa } from "next/font/google";
-import "./globals.css";
-
+import "../globals.css";
 import Provider from "@/providers";
 import ThemeToggle from "@/components/ThemeToggle";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa-sans",
@@ -28,6 +28,7 @@ export default function RootLayout({
         <Provider>
           <ThemeToggle />
           {children}
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
         </Provider>
       </body>
     </html>

@@ -8,3 +8,40 @@
   --color-theme-yellow: oklch(0.85 0.18 100);
   --color-theme-light: oklch(0.94 0.01 270);
 }
+
+.hide-date-icon::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+  appearance: none;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-theme-gray-dark);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-theme-dark);
+  border-radius: 10px;
+  border: 2px solid var(--color-theme-gray-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--color-theme-yellow) 50%, transparent);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;    /* Firefox */
+}

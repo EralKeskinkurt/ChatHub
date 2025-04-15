@@ -5,11 +5,29 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Spinner from "@/components/Spinner";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/validation/auth-validation";
+import { useForm } from "react-hook-form";
+
+interface FormData {
+  email: string;
+  password: string;
+}
 export default function Home() {
   const { theme } = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [mounted, setMounted] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (formData: FormData) => {
+    return formData;
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -40,7 +58,7 @@ export default function Home() {
             />
           )}
         </div>
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div className="relative">
             <Icon
               icon="mdi:email-outline"
@@ -49,10 +67,16 @@ export default function Home() {
             <input
               type="email"
               placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email", { required: "E-mail is required" })}
               className="w-full bg-transparent border dark:border-theme-light border-theme-gray-dark/50 rounded-md py-2 pl-10 pr-3 focus:outline-none focus:ring-2 dark:focus:ring-theme-yellow focus:ring-theme-gray-dark"
             />
+            <p
+              className={`text-red-400 text-xs transition-opacity mt-1 ${
+                errors.email?.message ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              * {errors?.email?.message ? errors.email.message : "----------"}
+            </p>
           </div>
           <div className="relative">
             <Icon
@@ -62,21 +86,32 @@ export default function Home() {
             <input
               type="password"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password", { required: "Password is required" })}
               className="w-full bg-transparent border dark:border-theme-light border-theme-gray-dark/50 rounded-md py-2 pl-10 pr-3 focus:outline-none focus:ring-2 dark:focus:ring-theme-yellow focus:ring-theme-gray-dark"
             />
+            <p
+              className={`text-red-400 text-xs transition-opacity mt-1 ${
+                errors.password?.message ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              *{" "}
+              {errors?.password?.message
+                ? errors.password.message
+                : "----------"}
+            </p>
           </div>
-          <Link
-            href="/register"
-            className="text-sm dark:text-theme-yellow text-theme-dark"
-          >
-            Forgot password ?
-          </Link>
-        </div>
-        <button className="w-full dark:bg-theme-yellow bg-theme-gray-dark dark:text-theme-dark text-theme-yellow font-semibold py-2 rounded-md ">
-          LOG IN
-        </button>
+          <div className="flex flex-col items-start gap-5">
+            <Link
+              href="/register"
+              className="text-sm dark:text-theme-yellow text-theme-dark"
+            >
+              Forgot password ?
+            </Link>
+            <button className="w-full dark:bg-theme-yellow bg-theme-gray-dark dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md ">
+              LOG IN
+            </button>
+          </div>
+        </form>
         <p className="text-center dark:text-theme-light text-theme-dark/60 text-sm">
           No account?{" "}
           <Link

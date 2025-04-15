@@ -1,0 +1,22 @@
+export const emojiList = [
+    { name: "Grinning Face", icon: "twemoji:grinning-face" },
+    { name: "Smiling Face with Smiling Eyes", icon: "twemoji:smiling-face-with-smiling-eyes" },
+    { name: "Face with Tears of Joy", icon: "twemoji:face-with-tears-of-joy" },
+    { name: "Rolling on the Floor Laughing", icon: "twemoji:rolling-on-the-floor-laughing" },
+    { name: "Smiling Face with Heart-Eyes", icon: "twemoji:smiling-face-with-heart-eyes" },
+    { name: "Thinking Face", icon: "twemoji:thinking-face" },
+    { name: "Zany Face", icon: "twemoji:zany-face" },
+    { name: "Exploding Head", icon: "twemoji:exploding-head" },
+    { name: "Face with Monocle", icon: "twemoji:face-with-monocle" },
+    { name: "Winking Face", icon: "twemoji:winking-face" },
+    { name: "Face Blowing a Kiss", icon: "twemoji:face-blowing-a-kiss" },
+    { name: "Smiling Face with Sunglasses", icon: "twemoji:smiling-face-with-sunglasses" },
+    { name: "Crying Face", icon: "twemoji:crying-face" },
+    { name: "Loudly Crying Face", icon: "twemoji:loudly-crying-face" },
+    { name: "Angry Face", icon: "twemoji:angry-face" },
+    { name: "Red Heart", icon: "twemoji:red-heart" },
+    { name: "Fire", icon: "twemoji:fire" },
+    { name: "Hundred Points", icon: "twemoji:hundred-points" },
+    { name: "Clapping Hands", icon: "twemoji:clapping-hands" },
+    { name: "Folded Hands", icon: "twemoji:folded-hands" }
+];
