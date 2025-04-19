@@ -26,7 +26,10 @@ export default function InterfaceLayout({
       >
         <Provider>
           {children}
-          <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="top-right"
+          />
         </Provider>
       </body>
     </html>

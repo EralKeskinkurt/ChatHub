@@ -1,4 +1,5 @@
 "use client";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 export default function MessageHeader() {
   return (
@@ -27,6 +28,14 @@ export default function MessageHeader() {
           </div>
         </div>
         <h1 className="font-semibold">Eral Keskinkurt</h1>
+        <div className="flex items-center justify-center gap-2 ml-auto">
+          <span className="dark:text-theme-light/80 dark:hover:bg-theme-light/20 rounded-sm cursor-pointer p-2 flex">
+            <Icon icon="streamline:webcam-video-solid" width={24} height={24} />
+          </span>
+          <span className="dark:text-theme-light/80 dark:hover:bg-theme-light/20 rounded-sm cursor-pointer p-2 flex">
+            <Icon icon="teenyicons:phone-outline" width={24} height={24} />
+          </span>
+        </div>
       </div>
     </div>
   );

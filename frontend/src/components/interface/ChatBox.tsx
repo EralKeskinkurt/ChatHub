@@ -4,10 +4,10 @@ import MessagesBox from "./MessagesBox";
 
 export default function ChatBox() {
   return (
-    <div className="flex flex-col items-center justify-start h-full w-4/5 overflow-hidden">
+    <main className="flex flex-col items-center justify-start h-full w-4/5 overflow-hidden">
       <MessageHeader />
       <MessagesBox />
       <MessageFooter />
-    </div>
+    </main>
   );
 }

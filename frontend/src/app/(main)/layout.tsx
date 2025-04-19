@@ -28,7 +28,10 @@ export default function RootLayout({
         <Provider>
           <ThemeToggle />
           {children}
-          <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="bottom-left"
+          />
         </Provider>
       </body>
     </html>
