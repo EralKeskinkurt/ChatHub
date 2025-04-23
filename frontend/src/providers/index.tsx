@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import QueryProvider from "./query-provider";
+import AuthProvider from "./auth-provider";
 
 function Provider({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +13,7 @@ function Provider({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </ThemeProvider>
     </QueryProvider>
   );

@@ -3,26 +3,23 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Spinner from "@/components/Spinner";
+import Loading from "@/components/Loading";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { registerSchema } from "@/validation/auth-validation";
 import { formatPhoneNumber } from "@/lib/formatPhoneNumber";
-
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  date: string;
-  password: string;
-  confirmPassword: string;
-}
+import { z } from "zod";
+import chatHubApi from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import useAuthStore from "@/stores/authStore";
 
 export default function Register() {
   const [phone, setPhone] = useState("");
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { push } = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value);
@@ -37,15 +34,35 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (formData: FormData) => {
-    return formData;
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (values: z.infer<typeof registerSchema>) => {
+      const response = await chatHubApi.post("/auth/register", values);
+      return response;
+    },
+    onSuccess: (data) => {
+      if ("status" in data) {
+        console.log("Some error occurred during registration.");
+      } else {
+        useAuthStore.getState().setUser(data);
+        setTimeout(() => {
+          push(`${process.env.NEXT_PUBLIC_BASE_URL}/interface`);
+        }, 100);
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const onSubmit = async (formData: RegisterFormData) => {
+    mutate(formData);
   };
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <Spinner />;
+  if (!mounted) return <Loading />;
 
   return (
     <div className="h-screen flex items-center justify-center w-full bg-transparent">
@@ -53,20 +70,20 @@ export default function Register() {
         <div className="flex justify-center">
           {theme === "dark" ? (
             <Image
-              src="/images/light-logo.png"
-              alt="chat hub logo"
-              width={70}
-              height={70}
-              className="z-10"
-              priority
-            />
-          ) : (
-            <Image
               src="/images/dark-logo.png"
               alt="chat hub logo"
               width={70}
               height={70}
-              className="z-10"
+              className="z-10 max-w-[5rem] w-auto"
+              priority
+            />
+          ) : (
+            <Image
+              src="/images/light-logo.png"
+              alt="chat hub logo"
+              width={70}
+              height={70}
+              className="z-10 max-w-[5rem] w-auto"
               priority
             />
           )}
@@ -160,18 +177,21 @@ export default function Register() {
                 className="absolute left-3 top-3 text-theme-dark dark:text-theme-light cursor-pointer"
               />
               <input
-                {...register("date", { required: "Date is required" })}
+                {...register("birthDate", { required: "Date is required" })}
                 type="date"
-                id="date"
+                id="birthDate"
                 placeholder="Date of birth"
                 className="w-full bg-transparent border hide-date-icon dark:border-theme-light border-theme-gray-dark/50 rounded-md py-2 pl-10 pr-3 focus:outline-none focus:ring-2  dark:focus:ring-theme-yellow focus:ring-theme-gray-dark"
               />
               <p
                 className={`text-red-400 text-xs transition-opacity mt-1 ${
-                  errors.date?.message ? "opacity-100" : "opacity-0"
+                  errors.birthDate?.message ? "opacity-100" : "opacity-0"
                 }`}
               >
-                * {errors?.date?.message ? errors.date.message : "----------"}
+                *{" "}
+                {errors?.birthDate?.message
+                  ? errors.birthDate.message
+                  : "----------"}
               </p>
             </div>
             <div className="relative">
@@ -220,9 +240,13 @@ export default function Register() {
                   : "----------"}
               </p>
             </div>
-            <button className="w-full dark:bg-theme-yellow bg-theme-gray-dark/90 dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md cursor-pointer">
-              CREATE ACCOUNT
-            </button>
+            {isPending ? (
+              <Loading className="w-6 h-6" />
+            ) : (
+              <button className="w-full dark:bg-theme-yellow bg-theme-gray-dark/90 dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md cursor-pointer">
+                CREATE ACCOUNT
+              </button>
+            )}
           </div>
         </form>
       </div>

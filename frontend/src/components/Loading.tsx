@@ -3,7 +3,7 @@ export type IconSize = {
   className?: string;
 };
 
-export default function Spinner({ size = 1, className }: IconSize) {
+export default function Loading({ size = 1, className }: IconSize) {
   return (
     <div className="w-full h-full flex items-center justify-center fixed z-30 dark:bg-theme-dark bg-theme-light">
       <svg

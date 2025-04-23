@@ -1,7 +1,18 @@
 import { create } from "zustand";
 
-export const authStore = create((set) => ({
+interface AuthStoreState {
+  user: User | null;
+}
+
+interface AuthStoreActions {
+  setUser: (user: User | null) => void;
+  logout: () => void;
+}
+
+const useAuthStore = create<AuthStoreState & AuthStoreActions>((set) => ({
   user: null,
-  setUser: () => set({ user: null }),
-  clearUser: () => set({ user: null }),
+  setUser: (user) => set({ user }),
+  logout: () => set({ user: null }),
 }));
+
+export default useAuthStore;
