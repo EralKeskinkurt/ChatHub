@@ -1,10 +1,16 @@
 "use client";
-import useAuthStore from "@/stores/authStore";
+import useFriendshipStore from "@/stores/friendshipStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function MessageHeader() {
-  const user = useAuthStore((state) => state.user);
+  const selectedChatFriend = useFriendshipStore(
+    (state) => state.selectedChatFriend
+  );
+
+  useEffect(() => {}, [selectedChatFriend]);
+
   return (
     <div className="w-full sticky p-4">
       <div className="w-full flex items-center justify-start gap-4">
@@ -30,7 +36,7 @@ export default function MessageHeader() {
             </div>
           </div>
         </div>
-        <h1 className="font-semibold">{user?.name}</h1>
+        <h1 className="font-semibold">{selectedChatFriend?.name}</h1>
         <div className="flex items-center justify-center gap-2 ml-auto">
           <span className="dark:text-theme-light/80 dark:hover:bg-theme-light/20 rounded-sm cursor-pointer p-2 flex">
             <Icon icon="streamline:webcam-video-solid" width={24} height={24} />

@@ -74,7 +74,7 @@ class UserService {
     };
 
     async createUser(
-        data: Omit<User, "createdAt" | "refreshToken" | "id" | "updatedAt">
+        data: Omit<User, "createdAt" | "refreshToken" | "id" | "updatedAt" | "status" | "lastSeen" | "imageUrl" | "bio">
     ): Promise<{
         user: Omit<User, "password" | "refreshToken">;
         tokens: { access_token: string; refresh_token: string };

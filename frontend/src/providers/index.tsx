@@ -3,7 +3,7 @@
 import { ThemeProvider } from "next-themes";
 import QueryProvider from "./query-provider";
 import AuthProvider from "./auth-provider";
-
+import FriendshipProvider from "./friendship-provider";
 function Provider({ children }: { children: React.ReactNode }) {
   return (
     <QueryProvider>
@@ -13,7 +13,9 @@ function Provider({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <FriendshipProvider>{children}</FriendshipProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryProvider>
   );

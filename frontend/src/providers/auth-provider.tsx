@@ -1,9 +1,10 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "@/stores/authStore";
 import Loading from "@/components/Loading";
 import { useEffect } from "react";
+import { useSocket } from "@/hooks/useSocket";
+import UseNotificationListener from "@/hooks/useNotificationListener";
 
 export default function AuthProvider({
   children,
@@ -15,6 +16,10 @@ export default function AuthProvider({
     queryKey: ["/auth/me"],
   });
 
+  const isAuthenticated = !!data;
+
+  useSocket(isAuthenticated);
+  UseNotificationListener();
   useEffect(() => {
     if (data) {
       setUser(data);
@@ -23,6 +28,11 @@ export default function AuthProvider({
     }
   }, [data, error, setUser]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center fixed z-30 dark:bg-theme-dark bg-theme-light">
+        <Loading />
+      </div>
+    );
   return <>{children}</>;
 }

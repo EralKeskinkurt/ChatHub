@@ -8,13 +8,135 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  name         String
-  email        String   @unique
-  phone        String   @unique
-  birthDate    DateTime
-  password     String
-  refreshToken String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                    Int                   @id @default(autoincrement())
+  name                  String
+  email                 String                @unique
+  phone                 String                @unique
+  birthDate             DateTime
+  password              String
+  imageUrl              String?
+  bio                   String?
+  refreshToken          String?
+  status                UserStatus            @default(OFFLINE)
+  lastSeen              DateTime              @default(now())
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  sentRequests          Friendship[]          @relation("SentRequests")
+  receivedRequests      Friendship[]          @relation("ReceivedRequests")
+  notificationsReceived Notification[]        @relation("NotificationsReceived")
+  notificationsSent     Notification[]        @relation("NotificationsSent")
+  messages              Message[]
+  participants          ChatRoomParticipant[]
+  MessageReaction       MessageReaction[]
+}
+
+model ChatRoom {
+  id           Int                   @id @default(autoincrement())
+  name         String?
+  isGroup      Boolean               @default(false)
+  createdAt    DateTime              @default(now())
+  participants ChatRoomParticipant[]
+  messages     Message[]
+}
+
+model ChatRoomParticipant {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+  role       ChatRole @default(MEMBER)
+  joinedAt   DateTime @default(now())
+  isMuted    Boolean  @default(false)
+
+  @@unique([userId, chatRoomId])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+  isEdited  Boolean  @default(false)
+  isDeleted Boolean  @default(false)
+
+  sender          User              @relation(fields: [senderId], references: [id])
+  senderId        Int
+  type            MessageType       @default(TEXT)
+  mediaUrl        String?
+  chatRoom        ChatRoom          @relation(fields: [chatRoomId], references: [id])
+  chatRoomId      Int
+  MessageReaction MessageReaction[]
+}
+
+model Friendship {
+  id        Int              @id @default(autoincrement())
+  user      User             @relation("SentRequests", fields: [userId], references: [id])
+  userId    Int
+  friendId  Int
+  friend    User             @relation("ReceivedRequests", fields: [friendId], references: [id])
+  status    FriendshipStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([userId, friendId])
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  user      User             @relation("NotificationsReceived", fields: [userId], references: [id])
+  userId    Int
+  sender    User?            @relation("NotificationsSent", fields: [senderId], references: [id])
+  senderId  Int?
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+}
+
+enum NotificationType {
+  FRIEND_BLOCKED
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+  MESSAGE
+  CUSTOM
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  DO_NOT_DISTURB
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+  FILE
+  SYSTEM
+}
+
+model MessageReaction {
+  id        Int      @id @default(autoincrement())
+  message   Message  @relation(fields: [messageId], references: [id])
+  messageId Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  emoji     String
+  reactedAt DateTime @default(now())
+
+  @@unique([messageId, userId]) // aynı kullanıcı aynı mesaja 1 kez tepki versin
+}
+
+enum ChatRole {
+  OWNER
+  ADMIN
+  MEMBER
 }

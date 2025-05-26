@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+import useAuthStore from "@/stores/authStore";
 
 export default function ChatUsersFooterProfile() {
+  const user = useAuthStore((state) => state.user);
   return (
     <div className="flex items-center justify-between bg-theme-dark px-4 py-3 border-t border-theme-dark mt-auto">
       <div className="flex items-center gap-3">
@@ -13,8 +15,8 @@ export default function ChatUsersFooterProfile() {
           height={40}
         />
         <div className="dark:text-theme-light text-sm leading-tight">
-          <div className="font-medium">Ahmet Yılmaz</div>
-          <div className="dark:text-theme-light/70 text-xs">ahmet@mail.com</div>
+          <div className="font-medium">{user?.name}</div>
+          <div className="dark:text-theme-light/70 text-xs">{user?.email}</div>
         </div>
       </div>
       <div tabIndex={0} className="relative ml-auto group">

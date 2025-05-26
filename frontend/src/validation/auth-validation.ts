@@ -2,7 +2,7 @@ import { formatPhoneNumber } from "@/lib/formatPhoneNumber";
 import { z } from "zod";
 
 
-const phoneValidation = z
+export const phoneValidation = z
     .string()
     .min(10, "Phone number must be at least 10 digits")
     .max(15, "Phone number can't be longer than 15 digits")

@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -16,9 +15,7 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
   const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const { push } = useRouter();
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,15 +29,12 @@ export default function Login() {
       const response = await chatHubApi.post("/auth/login", values);
       return response;
     },
-    onSuccess: (data) => {
-      if ("status" in data) {
-        console.log("Some error occurred during registration.");
-      } else {
-        useAuthStore.getState().setUser(data);
-        setTimeout(() => {
-          push(`${process.env.NEXT_PUBLIC_BASE_URL}/interface`);
-        }, 100);
-      }
+    onSuccess: (response) => {
+      useAuthStore.getState().setUser(response.data);
+      setTimeout(() => {
+        console.log("Login successful");
+        router.push("/interface");
+      }, 200);
     },
     onError: (err) => {
       console.log(err);
@@ -51,11 +45,6 @@ export default function Login() {
     mutate(formData);
   };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return <Loading />;
   return (
     <div className="h-screen flex items-center justify-center w-full bg-transparent">
       <div className="dark:bg-theme-light/5 bg-theme-dark/5 dark:text-theme-light text-theme-dark rounded-xl shadow-xs dark:shadow-theme-light/50 shadow-theme-dark/50 p-8 w-full max-w-sm space-y-6">
@@ -134,13 +123,10 @@ export default function Login() {
                 type="button"
                 className="w-full dark:bg-theme-yellow bg-theme-gray-dark dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md flex items-center justify-center gap-2"
               >
-                <Loading />
+                <Loading className="!w-6 !h-6" />
               </button>
             ) : (
-              <button
-                type="submit"
-                className="w-full dark:bg-theme-yellow bg-theme-gray-dark dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md "
-              >
+              <button className="w-full dark:bg-theme-yellow bg-theme-gray-dark dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md cursor-pointer flex items-center justify-center gap-2">
                 LOG IN
               </button>
             )}

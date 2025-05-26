@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -18,8 +18,7 @@ import useAuthStore from "@/stores/authStore";
 export default function Register() {
   const [phone, setPhone] = useState("");
   const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const { push } = useRouter();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value);
@@ -39,15 +38,12 @@ export default function Register() {
       const response = await chatHubApi.post("/auth/register", values);
       return response;
     },
-    onSuccess: (data) => {
-      if ("status" in data) {
-        console.log("Some error occurred during registration.");
-      } else {
-        useAuthStore.getState().setUser(data);
-        setTimeout(() => {
-          push(`${process.env.NEXT_PUBLIC_BASE_URL}/interface`);
-        }, 100);
-      }
+    onSuccess: (response) => {
+      useAuthStore.getState().setUser(response.data);
+      setTimeout(() => {
+        console.log("Login successful");
+        router.push("/interface");
+      }, 200);
     },
     onError: (err) => {
       console.log(err);
@@ -57,12 +53,6 @@ export default function Register() {
   const onSubmit = async (formData: RegisterFormData) => {
     mutate(formData);
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return <Loading />;
 
   return (
     <div className="h-screen flex items-center justify-center w-full bg-transparent">
@@ -241,7 +231,12 @@ export default function Register() {
               </p>
             </div>
             {isPending ? (
-              <Loading className="w-6 h-6" />
+              <button
+                type="button"
+                className="w-full dark:bg-theme-yellow bg-theme-gray-dark dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md flex items-center justify-center gap-2"
+              >
+                <Loading className="!w-6 !h-6" />
+              </button>
             ) : (
               <button className="w-full dark:bg-theme-yellow bg-theme-gray-dark/90 dark:text-theme-dark text-theme-light font-semibold py-2 rounded-md cursor-pointer">
                 CREATE ACCOUNT
